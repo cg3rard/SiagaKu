@@ -4,60 +4,85 @@
 
 <h1 align="center">SiagaKu</h1>
 
-<p align="center">Emergency (SOS) and incident reporting for citizens, with AI-assisted verification for the support team.</p>
+<p align="center">Emergency (SOS) and disaster incident reporting for citizens using AI-assisted verification for the support team.</p>
 
-## Important Links
+---
 
-### For Users
+## Tech Stack
 
-|                      | Link                                                                                 |
-| -------------------- | ------------------------------------------------------------------------------------ |
-| Application (Mobile) | [folder.felixfanady.com/s/siagaku-app](https://folder.felixfanady.com/s/siagaku-app) |
-| Website (Mobile)     | [siagaku.felixfanady.com/app](https://siagaku.felixfanady.com/app)                   |
+- **Mobile App:** Flutter (Android, iOS, Web)
+- **Frontend & API Console:** Next.js (TypeScript, Tailwind CSS)
+- **Computer Vision Service:** Python, YuNet + SFace (Face Matching)
+- **AI Verification:** OpenRouter API (Primary) & Google Gemini API (Fallback)
+- **Infrastructure & Deployment:** Docker, Caddy Web Server, Vercel
 
-### For Admin & Support Team
+---
 
-|         | Link                                                        |
-| ------- | ----------------------------------------------------------- |
-| Website | [siagaku.felixfanady.com](https://siagaku.felixfanady.com/) |
+## Current Progress (Status Proyek: 100% Selesai)
 
-### Others
+- [x] **Aplikasi Warga (Mobile):** Alur Login NIK, _Face Verification_, Fitur _One-tap SOS_, Pelaporan Bencana lengkap dengan foto/lokasi, dan _Alerts_ wilayah sekitar.
+- [x] **Dashboard Support & Admin (Web):** _Real-time report queue_, Peta Monitoring, Status Wilayah, Broadcast Peringatan, dan Verifikasi Ulang Wajah untuk aksi krusial.
+- [x] **Service Computer Vision & AI:** _Health check endpoint_, _face matching pipeline_ (YuNet + SFace) via Docker, serta validasi otomatis laporan bencana berbasis data BMKG & portal berita.
+- [x] **Deployment & Production Ready:** Seluruh komponen (_Mobile App_, _Web Console_, dan _CV Engine_) telah terintegrasi penuh dan di-_deploy_ pada server publik.
 
-|                             | Link                                                                             |
-| --------------------------- | -------------------------------------------------------------------------------- |
-| Backend for Computer Vision | [api-siagaku.felixfanady.com/health](https://api-siagaku.felixfanady.com/health) |
+---
+
+## Important Links & Demo Accounts
+
+### 1. User / Citizens (Mobile)
+
+- **App Download (APK):** [folder.felixfanady.com/s/siagaku-app](https://folder.felixfanady.com/s/siagaku-app)
+- **Web App (Mobile):** [siagaku.felixfanady.com/app](https://siagaku.felixfanady.com/app)
+- **Demo Account:** NIK `8888888888888888`
+
+### 2. Admin & Support Team
+
+- **Web Dashboard:** [siagaku.felixfanady.com](https://siagaku.felixfanady.com/)
+- **Demo Admin:** `demo.admin` / `demo.bycode123`
+- **Demo Support:** `demo.support` / `demo.bycode123`
+- **Demo Face Verifier:** `demo.verif` / `demo.bycode123`
+
+### 3. System & Backend
+
+- **API Computer Vision Health Check:** [api-siagaku.felixfanady.com/health](https://api-siagaku.felixfanady.com/health)
+
+---
 
 ## Features
 
 - **Citizens:** NIK login with face verification, one-tap SOS, incident reports with photo and location, and nearby alerts.
-- **Support team:** real-time report queue, monitoring map, region status, and alerts sent to nearby or all citizens.
-- **AI verification:** each report is checked against BMKG earthquake data and recent news. OpenRouter free models are tried first, with Google Gemini as the fallback.
-- **Admin:** support accounts with assigned provinces, citizen management, login logs, and face re-verification before high-privilege actions.
+- **Support team:** Real-time report queue, monitoring map, region status, and alerts sent to nearby or all citizens.
+- **AI verification:** Each report is checked against BMKG earthquake data and recent news. OpenRouter free models are tried first, with Google Gemini as the fallback.
+- **Admin:** Support accounts with assigned provinces, citizen management, login logs, and face re-verification before high-privilege actions.
+
+---
 
 ## Project Structure
 
 | Folder             | Description                                                         |
-| ------------------ | ------------------------------------------------------------------- |
+| :----------------- | :------------------------------------------------------------------ |
 | `app/`             | Flutter citizen app (Android, iOS, Web)                             |
 | `frontend/`        | Next.js admin & support console and the mobile API                  |
 | `computer_vision/` | Face matching service (YuNet + SFace) behind Caddy, run with Docker |
 
+---
+
 ## Running Locally
 
+### 1. Clone Repository
+
 ```bash
-# Admin & support console + API
+git clone [https://github.com/username/SiagaKu.git](https://github.com/username/SiagaKu.git)
+cd SiagaKu
+
 cd frontend
 npm install
-npm run dev            # http://localhost:3000
+npm run dev        # Runs on http://localhost:3000
 
-# Citizen app
 cd app
 flutter pub get
-flutter run            # uses https://siagaku.felixfanady.com by default
+flutter run        # Uses [https://siagaku.felixfanady.com](https://siagaku.felixfanady.com) by default
 
-# Computer vision service
 cd computer_vision
 docker compose up -d --build
 ```
-
-Copy `frontend/.env.example` to `frontend/.env.local` and fill in the values.
