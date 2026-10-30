@@ -1,0 +1,35 @@
+name: siagaku
+description: SiagaKu - aplikasi warga untuk laporan darurat (SOS) dan laporan kejadian.
+publish_to: none
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.6.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^1.2.2
+  shared_preferences: ^2.3.3
+  geolocator: ^13.0.2
+  image_picker: ^1.1.2
+  flutter_map: ^7.0.2
+  latlong2: ^0.9.1
+  google_fonts: ^6.2.1
+  audioplayers: 6.8.1
+  flutter_local_notifications: 17.2.4
+  camera: 0.12.1
+  google_mlkit_face_detection: 0.15.1
+  firebase_core: 4.15.0
+  firebase_messaging: 16.7.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/sounds/
+    - assets/images/
