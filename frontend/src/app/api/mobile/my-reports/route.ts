@@ -1,0 +1,26 @@
+import { NextResponse } from "next/server";
+import { db } from "@/lib/supabase";
+import { bad, requireCitizen, rateLimit } from "@/lib/mobile";
+import { requireFaceSession } from "@/lib/face";
+
+export const dynamic = "force-dynamic";
+
+export async function POST(req: Request) {
+  const rl = rateLimit(req, "mine", 30);
+  if (rl) return rl;
+  const b = await req.json().catch(() => null);
+  const f = await requireCitizen(b?.nik);
+  if (f.error) return f.error;
+  const c = f.citizen;
+  const fs = requireFaceSession(req, c.nik);
+  if (fs) return fs;
+  const { data, error } = await db()
+    .from("reports")
+    .select("id,kind,category,description,address,status,lat,lng,created_at,reviewed_by")
+    .eq("nik", c.nik)
+    .order("created_at", { ascending: false })
+    .limit(50);
+  if (error) return bad("Gagal memuat laporan.", 500);
+  const reports = (data ?? []).map(({ reviewed_by, ...r }) => ({ ...r, verified_by: r.status === "valid" ? (reviewed_by ? "petugas" : "otomatis") : null }));
+  return NextResponse.json({ reports });
+}

@@ -1,0 +1,43 @@
+import { db, fetchAll } from "@/lib/supabase";
+import { loadAllProfiles } from "@/lib/citizenProfile";
+import { lockedNiks } from "@/lib/face";
+import { getCurrentUser } from "@/lib/session";
+import { isSuperAdmin } from "@/lib/superAdmin";
+import { bypassEnabled, bypassIds } from "@/lib/faceBypass";
+import type { Citizen } from "@/lib/types";
+import CitizensClient from "./CitizensClient";
+
+export const dynamic = "force-dynamic";
+export const metadata = { title: "Pengguna (NIK) — SiagaKu Admin" };
+
+export default async function CitizensPage() {
+  const basePromise = fetchAll<{ nik: string; full_name: string; active: boolean; created_at: string }>(
+    (a, b) => db().from("citizens").select("nik,full_name,active,created_at").order("created_at", { ascending: false }).order("nik").range(a, b),
+    5000,
+  );
+  const allProfilesPromise = loadAllProfiles();
+
+  const [{ data }, profiles, locks, me, bypassed] = await Promise.all([
+    basePromise,
+    allProfilesPromise,
+    lockedNiks().catch((): Record<string, number> => ({})),
+    getCurrentUser(),
+    bypassIds("citizen").catch(() => new Set<string>()),
+  ]);
+  const meSuper = !!me && (await isSuperAdmin(me));
+  const base = data;
+  const rows: Citizen[] = base.map((c) => ({ ...c, ...(profiles[c.nik] ?? {}) }));
+
+  return (
+    <div className="page">
+      <div className="page-head">
+        <div>
+          <div className="eyebrow">Admin Panel</div>
+          <h1>Pengguna (NIK)</h1>
+          <p>Daftar NIK dan nama yang dipakai aplikasi mobile untuk login dan mengisi otomatis laporan warga.</p>
+        </div>
+      </div>
+      <CitizensClient initial={rows} locks={locks} meSuper={meSuper} bypassed={bypassEnabled() ? [...bypassed] : []} />
+    </div>
+  );
+}
