@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+models/
+*.part
+.env
+certs/
+run.ps1
+Caddyfile
+docker-compose.yml

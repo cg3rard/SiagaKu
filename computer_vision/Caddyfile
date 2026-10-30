@@ -1,0 +1,20 @@
+{
+	auto_https off
+}
+
+http://{$CV_DOMAIN} {
+	request_body {
+		max_size 8MB
+	}
+	header {
+		-Server
+		X-Content-Type-Options nosniff
+	}
+	@allowed path /health /v1/enroll /v1/compare
+	handle @allowed {
+		reverse_proxy cv:8100
+	}
+	handle {
+		respond 404
+	}
+}
